@@ -748,6 +748,24 @@ async def update_user_role(user_id: str, role: str, user=Depends(get_current_use
         raise HTTPException(status_code=404, detail="User not found")
     return {'message': 'Role updated'}
 
+@api_router.put("/admin/user/{user_id}/plan")
+async def update_user_plan(user_id: str, plan: str, user=Depends(get_current_user)):
+    """Admin: Update user subscription plan"""
+    if user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    if plan not in PLANS.keys():
+        raise HTTPException(status_code=400, detail="Invalid plan. Valid plans: free, basic, pro, premium")
+    
+    # Reset analyses_used when upgrading plan
+    result = await db.users.update_one(
+        {'user_id': user_id},
+        {'$set': {'plan': plan, 'analyses_used': 0}}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {'message': f'Plan updated to {plan}'}
+
 # ============== BLOG ROUTES ==============
 
 @api_router.get("/blogs")
