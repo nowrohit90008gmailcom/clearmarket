@@ -678,16 +678,57 @@ async def get_admin_stats(user=Depends(get_current_user)):
     
     total_users = await db.users.count_documents({})
     total_analyses = await db.analysis_logs.count_documents({})
+    total_blogs = await db.blogs.count_documents({})
     
     plan_distribution = {}
     for plan_id in PLANS.keys():
         count = await db.users.count_documents({'plan': plan_id})
         plan_distribution[plan_id] = count
     
+    # Page visit analytics
+    today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+    week_ago = today - timedelta(days=7)
+    month_ago = today - timedelta(days=30)
+    
+    visits_today = await db.page_visits.count_documents({'timestamp': {'$gte': today.isoformat()}})
+    visits_week = await db.page_visits.count_documents({'timestamp': {'$gte': week_ago.isoformat()}})
+    visits_month = await db.page_visits.count_documents({'timestamp': {'$gte': month_ago.isoformat()}})
+    
+    # Page breakdown
+    pipeline = [
+        {'$match': {'timestamp': {'$gte': week_ago.isoformat()}}},
+        {'$group': {'_id': '$page', 'count': {'$sum': 1}}},
+        {'$sort': {'count': -1}},
+        {'$limit': 10}
+    ]
+    page_breakdown = await db.page_visits.aggregate(pipeline).to_list(10)
+    
+    # Daily visits for last 7 days
+    daily_visits = []
+    for i in range(7):
+        day_start = today - timedelta(days=i)
+        day_end = day_start + timedelta(days=1)
+        count = await db.page_visits.count_documents({
+            'timestamp': {'$gte': day_start.isoformat(), '$lt': day_end.isoformat()}
+        })
+        daily_visits.append({
+            'date': day_start.strftime('%Y-%m-%d'),
+            'visits': count
+        })
+    daily_visits.reverse()
+    
     return {
         'total_users': total_users,
         'total_analyses': total_analyses,
-        'plan_distribution': plan_distribution
+        'total_blogs': total_blogs,
+        'plan_distribution': plan_distribution,
+        'analytics': {
+            'visits_today': visits_today,
+            'visits_week': visits_week,
+            'visits_month': visits_month,
+            'page_breakdown': page_breakdown,
+            'daily_visits': daily_visits
+        }
     }
 
 @api_router.put("/admin/user/{user_id}/role")
