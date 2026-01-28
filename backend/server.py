@@ -584,6 +584,15 @@ async def get_recent_analyses(user=Depends(get_current_user)):
     
     return logs
 
+@api_router.get("/stocks/saved")
+async def get_saved_analyses(user=Depends(get_current_user)):
+    """Get all user's saved stock analyses (full reports)"""
+    analyses = await db.stock_analyses.find(
+        {'user_id': user['user_id']},
+        {'_id': 0}
+    ).sort('analyzed_at', -1).to_list(100)
+    return analyses
+
 # ============== PORTFOLIO ROUTES ==============
 
 @api_router.get("/portfolio")
