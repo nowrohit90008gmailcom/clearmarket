@@ -81,6 +81,8 @@ function AppRouter() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
       <Route path="/pricing" element={<Pricing />} />
+      <Route path="/blog" element={<Blog />} />
+      <Route path="/blog/:blogId" element={<Blog />} />
       <Route
         path="/dashboard"
         element={
