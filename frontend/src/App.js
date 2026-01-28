@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Toaster } from './components/ui/sonner';
+import axios from 'axios';
 
 // Pages
 import Landing from './pages/Landing';
@@ -14,6 +16,30 @@ import Portfolio from './pages/Portfolio';
 import MutualFunds from './pages/MutualFunds';
 import Admin from './pages/Admin';
 import Pricing from './pages/Pricing';
+import Blog from './pages/Blog';
+
+const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+
+// Page visit tracker
+function PageTracker() {
+  const location = useLocation();
+  
+  useEffect(() => {
+    const trackVisit = async () => {
+      try {
+        await axios.post(`${API}/track/visit`, {
+          page: location.pathname,
+          referrer: document.referrer || null
+        });
+      } catch (e) {
+        // Silent fail for tracking
+      }
+    };
+    trackVisit();
+  }, [location.pathname]);
+  
+  return null;
+}
 
 // Protected Route Component
 function ProtectedRoute({ children, adminOnly = false }) {
