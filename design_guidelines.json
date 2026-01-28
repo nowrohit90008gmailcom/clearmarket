@@ -1,0 +1,202 @@
+{
+  "brand_identity": {
+    "name": "ClearMarket",
+    "tagline": "Stock Market Clarity, Not Noise.",
+    "mission": "Empower Indian retail investors with jargon-free, actionable stock insights.",
+    "emotional_tone": "Trustworthy, Calm, Optimistic, Clear.",
+    "archetype": "The Wise Mentor (Growth & Guidance)",
+    "visual_style": "Modern Fintech (Groww-inspired but distinct). Clean, white-space heavy, rounded corners, mobile-first."
+  },
+  "typography": {
+    "font_family": {
+      "headings": "Plus Jakarta Sans, sans-serif",
+      "body": "Inter, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "weights": {
+      "light": 300,
+      "regular": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700
+    },
+    "scale": {
+      "h1": "text-4xl md:text-6xl font-bold tracking-tight",
+      "h2": "text-3xl md:text-4xl font-semibold tracking-tight",
+      "h3": "text-2xl md:text-3xl font-semibold",
+      "body_lg": "text-lg leading-relaxed",
+      "body_base": "text-base leading-relaxed",
+      "caption": "text-sm text-muted-foreground"
+    },
+    "usage_rules": [
+      "Use Plus Jakarta Sans for all Headings (h1-h3) and Navigation links.",
+      "Use Inter for all body text, data tables, and inputs.",
+      "Use JetBrains Mono for stock tickers (e.g., RELIANCE, TCS) and numeric data in tables.",
+      "Headings must have tight tracking (-0.02em).",
+      "Body text should have relaxed leading (1.6) for readability."
+    ]
+  },
+  "colors": {
+    "theme_mode": "light-default-with-toggle",
+    "palette": {
+      "primary": {
+        "name": "Growth Emerald",
+        "hex": "#059669",
+        "tailwind": "emerald-600",
+        "usage": "Primary CTAs, 'Buy' signals, Positive trends."
+      },
+      "secondary": {
+        "name": "Trust Slate",
+        "hex": "#0f172a",
+        "tailwind": "slate-900",
+        "usage": "Headings, Footer background, Strong borders."
+      },
+      "accent": {
+        "name": "Caution Amber",
+        "hex": "#d97706",
+        "tailwind": "amber-600",
+        "usage": "'Hold' signals, Warnings, Highlights."
+      },
+      "destructive": {
+        "name": "Risk Rose",
+        "hex": "#e11d48",
+        "tailwind": "rose-600",
+        "usage": "'Sell' signals, Negative trends, Errors."
+      },
+      "background": {
+        "light": "#ffffff",
+        "dark": "#020617",
+        "subtle_light": "#f8fafc",
+        "subtle_dark": "#0f172a"
+      },
+      "text": {
+        "primary_light": "#0f172a",
+        "secondary_light": "#64748b",
+        "primary_dark": "#f8fafc",
+        "secondary_dark": "#94a3b8"
+      }
+    },
+    "gradients": {
+      "hero_glow": "bg-gradient-to-br from-emerald-50 to-slate-50 dark:from-emerald-950/20 dark:to-slate-950",
+      "card_hover": "hover:bg-slate-50 dark:hover:bg-slate-900/50"
+    }
+  },
+  "layout_system": {
+    "container": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+    "spacing": {
+      "section_gap": "py-16 md:py-24",
+      "component_gap": "gap-6 md:gap-8",
+      "internal_padding": "p-6 md:p-8"
+    },
+    "grids": {
+      "dashboard": "grid grid-cols-1 md:grid-cols-12 gap-6",
+      "features": "grid grid-cols-1 md:grid-cols-3 gap-8",
+      "stock_card": "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+    },
+    "border_radius": {
+      "card": "rounded-xl",
+      "button": "rounded-full",
+      "input": "rounded-lg"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg shadow-emerald-600/20 transition-all duration-300 rounded-full px-8 py-3 font-medium",
+      "secondary": "bg-slate-100 text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 rounded-full px-6 py-2 font-medium",
+      "outline": "border-2 border-slate-200 text-slate-700 hover:border-emerald-600 hover:text-emerald-600 bg-transparent rounded-full px-6 py-2 font-medium transition-colors"
+    },
+    "cards": {
+      "base": "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300",
+      "interactive": "cursor-pointer hover:-translate-y-1 transition-transform duration-300"
+    },
+    "inputs": {
+      "style": "h-12 rounded-lg border-slate-200 focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-slate-50 dark:bg-slate-950"
+    },
+    "watermark": {
+      "style": "absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none z-0",
+      "content": "ClearMarket Analysis"
+    },
+    "verdict_badge": {
+      "buy": "bg-emerald-100 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-sm font-bold uppercase tracking-wide",
+      "sell": "bg-rose-100 text-rose-700 border border-rose-200 px-3 py-1 rounded-full text-sm font-bold uppercase tracking-wide",
+      "hold": "bg-amber-100 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-sm font-bold uppercase tracking-wide"
+    }
+  },
+  "assets": {
+    "images": {
+      "hero_main": {
+        "url": "https://images.unsplash.com/photo-1633104502126-ef02b623e6be?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwyfHxpbmRpYW4lMjBwcm9mZXNzaW9uYWwlMjBmaW5hbmNlJTIwaGFwcHl8ZW58MHx8fHwxNzY5NjAzMzI1fDA&ixlib=rb-4.1.0&q=85",
+        "alt": "Happy Indian investor succeeding in market",
+        "usage": "Landing Page Hero Section - Right side"
+      },
+      "hero_alt": {
+        "url": "https://images.unsplash.com/photo-1589386417686-0d34b5903d23?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHw0fHxpbmRpYW4lMjBwcm9mZXNzaW9uYWwlMjBmaW5hbmNlJTIwaGFwcHl8ZW58MHx8fHwxNzY5NjAzMzI1fDA&ixlib=rb-4.1.0&q=85",
+        "alt": "Professional Indian trader",
+        "usage": "About Us or Features Section"
+      },
+      "dashboard_context": {
+        "url": "https://images.unsplash.com/photo-1537655949728-d4e1c7c7bf90?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzN8MHwxfHNlYXJjaHwxfHxjbGVhbiUyMG1pbmltYWxpc3QlMjBvZmZpY2UlMjBkZXNrJTIwbGFwdG9wJTIwc3RvY2slMjBjaGFydHxlbnwwfHx8fDE3Njk2MDMzMjd8MA&ixlib=rb-4.1.0&q=85",
+        "alt": "Clean minimalist desk setup",
+        "usage": "Login/Signup Page Background (with overlay)"
+      },
+      "analysis_abstract": {
+        "url": "https://images.pexels.com/photos/5717751/pexels-photo-5717751.jpeg",
+        "alt": "Stock analysis charts on laptop",
+        "usage": "Features Section - 'Deep Analysis' block"
+      }
+    },
+    "icons": {
+      "library": "lucide-react",
+      "preferred_icons": {
+        "dashboard": "LayoutDashboard",
+        "stock_up": "TrendingUp",
+        "stock_down": "TrendingDown",
+        "portfolio": "Briefcase",
+        "analysis": "LineChart",
+        "user": "UserCircle",
+        "search": "Search",
+        "menu": "Menu",
+        "close": "X",
+        "check": "CheckCircle2",
+        "alert": "AlertTriangle"
+      }
+    }
+  },
+  "motion": {
+    "transitions": "transition-all duration-300 ease-in-out",
+    "hover_effects": "hover:shadow-lg hover:-translate-y-1",
+    "page_load": "animate-in fade-in slide-in-from-bottom-4 duration-700",
+    "list_stagger": "stagger-children-100"
+  },
+  "accessibility": {
+    "contrast": "Ensure text-to-background contrast ratio of at least 4.5:1.",
+    "focus_states": "Visible focus rings on all interactive elements (ring-2 ring-emerald-500).",
+    "aria_labels": "Required for all icon-only buttons.",
+    "reduced_motion": "Respect prefers-reduced-motion media query."
+  },
+  "instructions_to_main_agent": [
+    "1. SETUP: Install 'lucide-react' and 'recharts' for charts.",
+    "2. THEME: Implement a Dark/Light mode toggle using Tailwind's 'class' strategy. Default to Light mode.",
+    "3. LAYOUT: Use the 'Bento Grid' strategy for the Dashboard. Key metrics (Portfolio Value) must be prominent.",
+    "4. COMPONENTS: Use Shadcn UI for complex interactions (Dialogs, Selects, Tabs). Customize them to match the 'Rounded & Clean' aesthetic.",
+    "5. CHARTS: Use 'Recharts' for stock price history. Style them minimally (remove grid lines if possible, use gradients).",
+    "6. WATERMARK: Ensure every PDF report or Analysis View has the 'ClearMarket' watermark in the background.",
+    "7. MOBILE: Ensure the bottom navigation bar is present on mobile for quick access to Dashboard/Portfolio/Search.",
+    "8. DATA: Mock all stock data realistically. Do not use 'Lorem Ipsum' for financial data. Use real ticker names (RELIANCE, HDFCBANK, TATAMOTORS).",
+    "9. AUTH: Create a clean, split-screen layout for Login/Signup. Left side: Form. Right side: Testimonial/Image.",
+    "10. TESTING: Add 'data-testid' to all buttons, inputs, and major containers."
+  ],
+  "universal_guidelines": {
+    "design_philosophy": "Clarity over Clutter. If a pixel doesn't serve a purpose, remove it.",
+    "anti_patterns": [
+      "Do not use generic 'Bootstrap' blue.",
+      "Do not use complex gradients for backgrounds (keep it subtle).",
+      "Do not clutter the mobile view with too many columns."
+    ],
+    "code_style": [
+      "Use functional components with hooks.",
+      "Keep components small and focused.",
+      "Use Tailwind utility classes for 99% of styling."
+    ]
+  }
+}
