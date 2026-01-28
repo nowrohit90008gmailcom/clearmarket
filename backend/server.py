@@ -533,7 +533,7 @@ For PE > 30: potentially overvalued"""
     import random
     change_percent = round(random.uniform(-2.5, 3.5), 2)
     
-    return {
+    analysis_result = {
         'symbol': symbol,
         'name': stock_data['name'],
         'exchange': stock_data['exchange'],
@@ -558,8 +558,14 @@ For PE > 30: potentially overvalued"""
         },
         'price_history': generate_price_history(stock_data['price']),
         'analyzed_at': datetime.now(timezone.utc).isoformat(),
-        'disclaimer': "This analysis is for informational purposes only and does not constitute financial advice. Please consult a qualified financial advisor before making investment decisions."
+        'disclaimer': "This analysis is for informational purposes only and does not constitute financial advice. Please consult a qualified financial advisor before making investment decisions.",
+        'user_id': user['user_id']
     }
+    
+    # Store analysis for future re-reads
+    await db.stock_analyses.insert_one(analysis_result)
+    
+    return analysis_result
 
 @api_router.get("/stocks/recent")
 async def get_recent_analyses(user=Depends(get_current_user)):
