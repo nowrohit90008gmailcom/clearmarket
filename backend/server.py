@@ -395,7 +395,16 @@ async def analyze_stock(symbol: str, user=Depends(get_current_user)):
     """Analyze a stock and return Buy/Hold/Sell verdict with AI reasoning"""
     symbol = symbol.upper()
     
-    # Check usage limit
+    # Check if user already has this analysis (free re-read)
+    existing_analysis = await db.stock_analyses.find_one(
+        {'user_id': user['user_id'], 'symbol': symbol},
+        {'_id': 0}
+    )
+    if existing_analysis:
+        # Return cached analysis without counting
+        return existing_analysis
+    
+    # Check usage limit for new analysis
     plan = PLANS.get(user.get('plan', 'free'), PLANS['free'])
     if user.get('analyses_used', 0) >= plan['analyses_limit']:
         raise HTTPException(status_code=403, detail="Analysis limit reached. Please upgrade your plan.")
