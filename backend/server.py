@@ -99,6 +99,26 @@ class PlanInfo(BaseModel):
     analyses_limit: int
     features: List[str]
 
+class BlogCreate(BaseModel):
+    title: str
+    content: str
+    excerpt: str
+    cover_image: Optional[str] = None
+    tags: List[str] = []
+    published: bool = False
+
+class BlogUpdate(BaseModel):
+    title: Optional[str] = None
+    content: Optional[str] = None
+    excerpt: Optional[str] = None
+    cover_image: Optional[str] = None
+    tags: Optional[List[str]] = None
+    published: Optional[bool] = None
+
+class PageVisit(BaseModel):
+    page: str
+    referrer: Optional[str] = None
+
 # ============== HELPER FUNCTIONS ==============
 
 def generate_user_id():
