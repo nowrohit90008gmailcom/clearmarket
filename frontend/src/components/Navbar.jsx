@@ -81,6 +81,9 @@ export default function Navbar() {
                 <Link to="/pricing" className="text-muted-foreground hover:text-foreground transition-colors" data-testid="nav-pricing">
                   Pricing
                 </Link>
+                <Link to="/blog" className="text-muted-foreground hover:text-foreground transition-colors" data-testid="nav-blog">
+                  Blog
+                </Link>
               </>
             )}
           </div>
