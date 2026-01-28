@@ -748,6 +748,105 @@ async def update_user_role(user_id: str, role: str, user=Depends(get_current_use
         raise HTTPException(status_code=404, detail="User not found")
     return {'message': 'Role updated'}
 
+# ============== BLOG ROUTES ==============
+
+@api_router.get("/blogs")
+async def get_blogs(published_only: bool = True):
+    """Get all blogs (published only for public)"""
+    query = {'published': True} if published_only else {}
+    blogs = await db.blogs.find(query, {'_id': 0}).sort('created_at', -1).to_list(100)
+    return blogs
+
+@api_router.get("/blogs/{blog_id}")
+async def get_blog(blog_id: str):
+    """Get single blog by ID"""
+    blog = await db.blogs.find_one({'id': blog_id}, {'_id': 0})
+    if not blog:
+        raise HTTPException(status_code=404, detail="Blog not found")
+    if not blog.get('published'):
+        raise HTTPException(status_code=404, detail="Blog not found")
+    
+    # Increment view count
+    await db.blogs.update_one({'id': blog_id}, {'$inc': {'views': 1}})
+    blog['views'] = blog.get('views', 0) + 1
+    return blog
+
+@api_router.post("/admin/blogs")
+async def create_blog(blog: BlogCreate, user=Depends(get_current_user)):
+    """Admin: Create a new blog"""
+    if user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    blog_id = f"blog_{uuid.uuid4().hex[:12]}"
+    slug = blog.title.lower().replace(' ', '-').replace('?', '').replace('!', '')[:50]
+    
+    blog_doc = {
+        'id': blog_id,
+        'slug': slug,
+        'title': blog.title,
+        'content': blog.content,
+        'excerpt': blog.excerpt,
+        'cover_image': blog.cover_image,
+        'tags': blog.tags,
+        'published': blog.published,
+        'author_id': user['user_id'],
+        'author_name': user['name'],
+        'views': 0,
+        'created_at': datetime.now(timezone.utc).isoformat(),
+        'updated_at': datetime.now(timezone.utc).isoformat()
+    }
+    await db.blogs.insert_one(blog_doc)
+    return {'id': blog_id, 'message': 'Blog created successfully'}
+
+@api_router.get("/admin/blogs")
+async def get_all_blogs_admin(user=Depends(get_current_user)):
+    """Admin: Get all blogs including drafts"""
+    if user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    blogs = await db.blogs.find({}, {'_id': 0}).sort('created_at', -1).to_list(100)
+    return blogs
+
+@api_router.put("/admin/blogs/{blog_id}")
+async def update_blog(blog_id: str, blog: BlogUpdate, user=Depends(get_current_user)):
+    """Admin: Update a blog"""
+    if user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    update_data = {k: v for k, v in blog.model_dump().items() if v is not None}
+    update_data['updated_at'] = datetime.now(timezone.utc).isoformat()
+    
+    result = await db.blogs.update_one({'id': blog_id}, {'$set': update_data})
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Blog not found")
+    return {'message': 'Blog updated successfully'}
+
+@api_router.delete("/admin/blogs/{blog_id}")
+async def delete_blog(blog_id: str, user=Depends(get_current_user)):
+    """Admin: Delete a blog"""
+    if user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    result = await db.blogs.delete_one({'id': blog_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Blog not found")
+    return {'message': 'Blog deleted successfully'}
+
+# ============== PAGE VISIT TRACKING ==============
+
+@api_router.post("/track/visit")
+async def track_page_visit(visit: PageVisit, request: Request):
+    """Track page visit for analytics"""
+    visit_doc = {
+        'id': f"visit_{uuid.uuid4().hex[:12]}",
+        'page': visit.page,
+        'referrer': visit.referrer,
+        'user_agent': request.headers.get('user-agent', ''),
+        'timestamp': datetime.now(timezone.utc).isoformat()
+    }
+    await db.page_visits.insert_one(visit_doc)
+    return {'message': 'Visit tracked'}
+
 # ============== MUTUAL FUND ROUTES ==============
 
 MOCK_MUTUAL_FUNDS = [
