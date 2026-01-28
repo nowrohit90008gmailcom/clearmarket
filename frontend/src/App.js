@@ -133,6 +133,7 @@ function App() {
     <ThemeProvider>
       <AuthProvider>
         <BrowserRouter>
+          <PageTracker />
           <AppRouter />
           <Toaster position="top-right" />
         </BrowserRouter>
