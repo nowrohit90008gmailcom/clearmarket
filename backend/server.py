@@ -597,7 +597,9 @@ async def get_saved_analyses(user=Depends(get_current_user)):
 
 @api_router.get("/portfolio")
 async def get_portfolio(user=Depends(get_current_user)):
-    """Get user's portfolio"""
+    """Get user's portfolio with real-time P&L calculation"""
+    import random
+    
     stocks = await db.portfolio_stocks.find(
         {'user_id': user['user_id']},
         {'_id': 0}
@@ -607,17 +609,28 @@ async def get_portfolio(user=Depends(get_current_user)):
     total_current = 0
     
     for stock in stocks:
-        stock_data = MOCK_STOCKS.get(stock['symbol'], {'price': stock['buy_price']})
-        current_price = stock_data['price']
+        stock_data = MOCK_STOCKS.get(stock['symbol'], {'price': stock['buy_price'], 'name': stock['symbol']})
+        
+        # Simulate realistic price fluctuation (±3% daily variation)
+        base_price = stock_data['price']
+        fluctuation = random.uniform(-0.03, 0.03)
+        current_price = round(base_price * (1 + fluctuation), 2)
+        day_change = round(fluctuation * 100, 2)
+        
+        # Calculate P&L
         invested = stock['quantity'] * stock['buy_price']
         current = stock['quantity'] * current_price
+        profit_loss = current - invested
+        profit_loss_percent = ((profit_loss) / invested) * 100 if invested > 0 else 0
         
         stock['current_price'] = current_price
+        stock['day_change'] = day_change
         stock['invested_value'] = round(invested, 2)
         stock['current_value'] = round(current, 2)
-        stock['profit_loss'] = round(current - invested, 2)
-        stock['profit_loss_percent'] = round(((current - invested) / invested) * 100, 2) if invested > 0 else 0
+        stock['profit_loss'] = round(profit_loss, 2)
+        stock['profit_loss_percent'] = round(profit_loss_percent, 2)
         stock['name'] = stock_data.get('name', stock['symbol'])
+        stock['sector'] = stock_data.get('sector', 'Unknown')
         
         total_invested += invested
         total_current += current
