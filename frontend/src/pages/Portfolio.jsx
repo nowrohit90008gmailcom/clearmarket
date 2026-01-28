@@ -221,10 +221,10 @@ export default function Portfolio() {
                     <tr className="border-b border-border">
                       <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Stock</th>
                       <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Qty</th>
-                      <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Buy Price</th>
-                      <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Current</th>
+                      <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Avg Buy</th>
+                      <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Current Price</th>
+                      <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Day Chg</th>
                       <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">P&L</th>
-                      <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">P&L %</th>
                       <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Actions</th>
                     </tr>
                   </thead>
@@ -233,8 +233,14 @@ export default function Portfolio() {
                       <tr key={stock.id} className="border-b border-border/50 hover:bg-muted/50" data-testid={`portfolio-row-${stock.symbol}`}>
                         <td className="py-4 px-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-                              <TrendingUp className="w-5 h-5 text-emerald-600" />
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                              stock.profit_loss >= 0 ? 'bg-emerald-100 dark:bg-emerald-900/30' : 'bg-rose-100 dark:bg-rose-900/30'
+                            }`}>
+                              {stock.profit_loss >= 0 ? (
+                                <TrendingUp className="w-5 h-5 text-emerald-600" />
+                              ) : (
+                                <TrendingDown className="w-5 h-5 text-rose-600" />
+                              )}
                             </div>
                             <div>
                               <p className="font-mono font-bold text-foreground">{stock.symbol}</p>
@@ -243,17 +249,26 @@ export default function Portfolio() {
                           </div>
                         </td>
                         <td className="py-4 px-4 text-right font-mono">{stock.quantity}</td>
-                        <td className="py-4 px-4 text-right font-mono">₹{stock.buy_price.toLocaleString('en-IN')}</td>
-                        <td className="py-4 px-4 text-right font-mono">₹{stock.current_price?.toLocaleString('en-IN')}</td>
-                        <td className={`py-4 px-4 text-right font-mono ${
-                          stock.profit_loss >= 0 ? 'text-emerald-600' : 'text-rose-600'
-                        }`}>
-                          {stock.profit_loss >= 0 ? '+' : ''}₹{stock.profit_loss?.toLocaleString('en-IN')}
+                        <td className="py-4 px-4 text-right font-mono">₹{stock.buy_price?.toLocaleString('en-IN')}</td>
+                        <td className="py-4 px-4 text-right">
+                          <p className="font-mono font-bold">₹{stock.current_price?.toLocaleString('en-IN')}</p>
                         </td>
-                        <td className={`py-4 px-4 text-right font-mono ${
-                          stock.profit_loss_percent >= 0 ? 'text-emerald-600' : 'text-rose-600'
+                        <td className={`py-4 px-4 text-right font-mono text-sm ${
+                          stock.day_change >= 0 ? 'text-emerald-600' : 'text-rose-600'
                         }`}>
-                          {stock.profit_loss_percent >= 0 ? '+' : ''}{stock.profit_loss_percent}%
+                          {stock.day_change >= 0 ? '+' : ''}{stock.day_change}%
+                        </td>
+                        <td className="py-4 px-4 text-right">
+                          <p className={`font-mono font-bold ${
+                            stock.profit_loss >= 0 ? 'text-emerald-600' : 'text-rose-600'
+                          }`}>
+                            {stock.profit_loss >= 0 ? '+' : ''}₹{stock.profit_loss?.toLocaleString('en-IN')}
+                          </p>
+                          <p className={`text-xs ${
+                            stock.profit_loss_percent >= 0 ? 'text-emerald-600' : 'text-rose-600'
+                          }`}>
+                            ({stock.profit_loss_percent >= 0 ? '+' : ''}{stock.profit_loss_percent}%)
+                          </p>
                         </td>
                         <td className="py-4 px-4 text-right">
                           <div className="flex items-center justify-end gap-2">
