@@ -386,7 +386,17 @@ export default function Admin() {
                             </td>
                             <td className="py-4 px-4 text-sm text-muted-foreground">{user.email}</td>
                             <td className="py-4 px-4 text-center">
-                              <Badge className={getPlanColor(user.plan)}>{user.plan || 'free'}</Badge>
+                              <Select value={user.plan || 'free'} onValueChange={(val) => updateUserPlan(user.user_id, val)}>
+                                <SelectTrigger className="w-28">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="free">Free</SelectItem>
+                                  <SelectItem value="basic">Basic</SelectItem>
+                                  <SelectItem value="pro">Pro</SelectItem>
+                                  <SelectItem value="premium">Premium</SelectItem>
+                                </SelectContent>
+                              </Select>
                             </td>
                             <td className="py-4 px-4 text-center">
                               <Badge variant={user.role === 'admin' ? 'destructive' : 'outline'}>{user.role}</Badge>
