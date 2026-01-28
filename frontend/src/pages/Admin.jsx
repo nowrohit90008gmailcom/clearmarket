@@ -100,6 +100,19 @@ export default function Admin() {
     }
   };
 
+  const updateUserPlan = async (userId, plan) => {
+    try {
+      await axios.put(`${API}/admin/user/${userId}/plan?plan=${plan}`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      toast.success(`Plan updated to ${plan}`);
+      setUsers(users.map(u => u.user_id === userId ? { ...u, plan, analyses_used: 0 } : u));
+    } catch (e) {
+      toast.error('Failed to update plan');
+    }
+  };
+
   const handleBlogSubmit = async (e) => {
     e.preventDefault();
     try {
