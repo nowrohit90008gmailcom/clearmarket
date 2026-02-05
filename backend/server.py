@@ -20,8 +20,8 @@ import uvicorn
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
 
-MONGO_URI = os.environ["MONGO_URI"]
-DB_NAME = os.environ["DB_NAME"]
+MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017")
+DB_NAME = os.environ.get("DB_NAME", "clearmarket")
 JWT_SECRET = os.environ.get("JWT_SECRET", "changeme")
 EMERGENT_LLM_KEY = os.environ.get("EMERGENT_LLM_KEY")
 ALPHA_VANTAGE_KEY = os.environ.get("ALPHA_VANTAGE_KEY", "demo")
@@ -76,9 +76,7 @@ def create_token(user_id: str) -> str:
 async def api_root():
     return {"message": "ClearMarket API running"}
 
-@api_router.get("/health")
-async def health():
-    return {"status": "ok", "time": datetime.now(timezone.utc).isoformat()}
+
 
 
 @app.get("/health")
