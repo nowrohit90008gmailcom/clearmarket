@@ -80,6 +80,11 @@ async def api_root():
 async def health():
     return {"status": "ok", "time": datetime.now(timezone.utc).isoformat()}
 
+
+@app.get("/health")
+async def root_health():
+    return {"status": "ok", "time": datetime.now(timezone.utc).isoformat()}
+
 @api_router.post("/auth/signup")
 async def signup(user: UserCreate):
     if await db.users.find_one({"email": user.email}):
