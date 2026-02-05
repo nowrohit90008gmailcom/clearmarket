@@ -7,6 +7,7 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { 
   TrendingUp, 
+  TrendingDown,
   Search, 
   LineChart, 
   Shield, 
@@ -41,6 +42,20 @@ export default function Landing() {
       title: 'Complete Fundamentals',
       description: 'PE ratio, market cap, EPS, ROE and more in simple terms.'
     }
+  ];
+
+  const marketSnapshot = [
+    { symbol: 'RELIANCE', price: '₹2,945', move: '+1.8%', positive: true, note: 'Energy + Retail momentum' },
+    { symbol: 'TCS', price: '₹4,126', move: '+0.9%', positive: true, note: 'Stable cash flow profile' },
+    { symbol: 'HDFCBANK', price: '₹1,679', move: '-0.6%', positive: false, note: 'Valuation reset in progress' },
+    { symbol: 'INFY', price: '₹1,588', move: '+2.1%', positive: true, note: 'Margin outlook improving' }
+  ];
+
+  const reportHighlights = [
+    'AI verdict with confidence score',
+    'Technical + fundamental signal summary',
+    'Risk checklist and scenario notes',
+    'Simple language built for retail investors'
   ];
 
   const steps = [
@@ -179,6 +194,65 @@ export default function Landing() {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Market Snapshot */}
+      <section className="py-16 md:py-24 bg-background" data-testid="market-snapshot-section">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            <div>
+              <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4">
+                Live-style market snapshot
+              </h2>
+              <p className="text-muted-foreground mb-8 max-w-xl">
+                Explore a quick view of high-interest Indian stocks and open a full analysis report in one click.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {marketSnapshot.map((stock) => (
+                  <Card key={stock.symbol} className="card-hover">
+                    <CardContent className="p-5 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <p className="font-mono font-semibold text-foreground">{stock.symbol}</p>
+                        <p className={`text-sm font-semibold flex items-center gap-1 ${stock.positive ? 'text-emerald-600' : 'text-rose-600'}`}>
+                          {stock.positive ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
+                          {stock.move}
+                        </p>
+                      </div>
+                      <p className="text-2xl font-bold text-foreground">{stock.price}</p>
+                      <p className="text-sm text-muted-foreground">{stock.note}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            <Card className="border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/60 dark:bg-emerald-900/10">
+              <CardContent className="p-8">
+                <h3 className="font-heading text-2xl font-semibold text-foreground mb-3">Inside every stock report</h3>
+                <p className="text-muted-foreground mb-6">
+                  Built to help you move from “what is happening?” to “what should I do next?” in minutes.
+                </p>
+                <ul className="space-y-3 mb-8">
+                  {reportHighlights.map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-foreground">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-600 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  size="lg"
+                  className="bg-emerald-600 hover:bg-emerald-700 rounded-full px-8"
+                  onClick={() => navigate('/signup')}
+                  data-testid="snapshot-cta"
+                >
+                  Build My First Analysis
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
