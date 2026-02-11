@@ -22,7 +22,8 @@ load_dotenv(ROOT_DIR / ".env")
 
 MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017")
 DB_NAME = os.environ.get("DB_NAME", "clearmarket")
-JWT_SECRET = os.environ.get("JWT_SECRET", "changeme")
+JWT_SECRET = os.environ["JWT_SECRET"]
+
 EMERGENT_LLM_KEY = os.environ.get("EMERGENT_LLM_KEY")
 ALPHA_VANTAGE_KEY = os.environ.get("ALPHA_VANTAGE_KEY", "demo")
 CORS_ORIGINS = os.environ.get("CORS_ORIGINS", "*").split(",")
