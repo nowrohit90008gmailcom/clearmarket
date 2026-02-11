@@ -201,7 +201,7 @@ export default function StockAnalysis() {
         {/* Watermark Container */}
         <div className="relative">
           <div className="watermark font-heading text-slate-900 dark:text-white">
-            ClearMarket
+            ClearAI
           </div>
 
           {/* Main Grid */}

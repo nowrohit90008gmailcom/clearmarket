@@ -190,7 +190,7 @@ export default function Landing() {
             Ready to invest with clarity?
           </h2>
           <p className="text-emerald-100 text-lg mb-8 max-w-2xl mx-auto">
-            Join thousands of Indian retail investors who are making smarter decisions with ClearMarket.
+            Join thousands of Indian retail investors who are making smarter decisions with ClearAI.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
