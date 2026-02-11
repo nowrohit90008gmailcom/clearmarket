@@ -59,7 +59,7 @@ export default function Signup() {
             <div className="w-10 h-10 rounded-lg bg-emerald-600 flex items-center justify-center">
               <TrendingUp className="w-6 h-6 text-white" />
             </div>
-            <span className="font-heading font-bold text-2xl text-foreground">ClearMarket</span>
+            <span className="font-heading font-bold text-2xl text-foreground">ClearAI</span>
           </Link>
 
           <Card className="border-0 shadow-none bg-transparent">
@@ -186,7 +186,7 @@ export default function Signup() {
             Start investing with clarity
           </h2>
           <p className="text-slate-300 mb-8">
-            Join thousands of Indian retail investors who make smarter decisions with ClearMarket.
+            Join thousands of Indian retail investors who make smarter decisions with ClearAI.
           </p>
           
           <div className="space-y-4">
@@ -211,7 +211,7 @@ export default function Signup() {
               </div>
             </div>
             <p className="text-slate-300 text-sm italic">
-              "Finally, stock analysis I can actually understand! ClearMarket made me confident 
+              "Finally, stock analysis I can actually understand! ClearAI made me confident 
               about my first equity investments."
             </p>
           </div>
