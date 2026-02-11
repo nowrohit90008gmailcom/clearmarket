@@ -72,9 +72,6 @@ def create_token(user_id: str) -> str:
 
 # ================== ROUTES ==================
 
-@api_router.get("/")
-async def api_root():
-    return {"message": "ClearMarket API running"}
 
 
 
