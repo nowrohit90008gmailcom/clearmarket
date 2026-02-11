@@ -8,10 +8,16 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const getUserFromToken = (jwtToken) => {
   if (!jwtToken) return null;
   try {
-    const payloadBase64 = jwtToken.split('.')[1];
-    if (!payloadBase64) return null;
-    const payloadJson = atob(payloadBase64.replace(/-/g, '+').replace(/_/g, '/'));
+    const payloadBase64Url = jwtToken.split('.')[1];
+    if (!payloadBase64Url) return null;
+
+    const normalized = payloadBase64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = normalized + '='.repeat((4 - (normalized.length % 4)) % 4);
+    const payloadJson = atob(padded);
     const payload = JSON.parse(payloadJson);
+
+    if (!payload.user_id) return null;
+
     return {
       user_id: payload.user_id,
       email: payload.email,
@@ -22,6 +28,8 @@ const getUserFromToken = (jwtToken) => {
     return null;
   }
 };
+
+const buildFallbackUser = (jwtToken) => getUserFromToken(jwtToken) || { user_id: 'authenticated_user' };
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -53,7 +61,7 @@ export function AuthProvider({ children }) {
 
       if (token && (status === 404 || status === 405)) {
         // Fallback for backends that only return JWT on login/signup and don't expose /auth/me
-        setUser(getUserFromToken(token));
+        setUser(buildFallbackUser(token));
         return;
       }
 
@@ -77,7 +85,7 @@ export function AuthProvider({ children }) {
     if (!newToken) {
       throw new Error('Authentication token missing from login response');
     }
-    const userData = response.data?.user || getUserFromToken(newToken);
+    const userData = response.data?.user || buildFallbackUser(newToken);
     localStorage.setItem('token', newToken);
     setToken(newToken);
     setUser(userData);
@@ -90,7 +98,7 @@ export function AuthProvider({ children }) {
     if (!newToken) {
       throw new Error('Authentication token missing from signup response');
     }
-    const userData = response.data?.user || getUserFromToken(newToken);
+    const userData = response.data?.user || buildFallbackUser(newToken);
     localStorage.setItem('token', newToken);
     setToken(newToken);
     setUser(userData);
@@ -113,7 +121,7 @@ export function AuthProvider({ children }) {
       setToken(newToken);
     }
 
-    const userData = response.data?.user || (newToken ? getUserFromToken(newToken) : response.data);
+    const userData = response.data?.user || (newToken ? buildFallbackUser(newToken) : response.data);
     setUser(userData);
     return userData;
   };
