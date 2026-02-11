@@ -4,77 +4,84 @@ import axios from 'axios';
 const AuthContext = createContext();
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const TOKEN_STORAGE_KEY = 'token';
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(() => localStorage.getItem('token'));
+  const [token, setToken] = useState(() => localStorage.getItem(TOKEN_STORAGE_KEY));
   const [loading, setLoading] = useState(true);
 
-  const logout = useCallback(async () => {
-    try {
-      await axios.post(`${API}/auth/logout`, {}, { withCredentials: true });
-    } catch (e) {
-      console.error('Logout error:', e);
-    }
-    localStorage.removeItem('token');
+  const clearAuth = useCallback(() => {
+    localStorage.removeItem(TOKEN_STORAGE_KEY);
     setToken(null);
     setUser(null);
   }, []);
 
-  const fetchUser = useCallback(async () => {
+  const fetchUser = useCallback(async (activeToken = token) => {
+    if (!activeToken) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+
     try {
-      const headers = token ? { Authorization: `Bearer ${token}` } : {};
       const response = await axios.get(`${API}/auth/me`, {
-        headers,
-        withCredentials: true
+        headers: { Authorization: `Bearer ${activeToken}` },
+        withCredentials: true,
       });
       setUser(response.data);
-    } catch (e) {
-      console.error('Auth check failed:', e);
-      if (token) {
-        localStorage.removeItem('token');
-        setToken(null);
-      }
-      setUser(null);
+    } catch (error) {
+      console.error('Auth check failed:', error);
+      clearAuth();
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, [token, clearAuth]);
 
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
 
   const login = async (email, password) => {
-    const response = await axios.post(`${API}/auth/login`, { email, password });
-    const { token: newToken, user: userData } = response.data;
-    localStorage.setItem('token', newToken);
-    setToken(newToken);
-    setUser(userData);
-    return userData;
+    const response = await axios.post(`${API}/auth/login`, { email, password }, { withCredentials: true });
+    const nextToken = response.data?.token;
+    const nextUser = response.data?.user;
+
+    if (!nextToken || !nextUser) {
+      throw new Error('Invalid login response from server.');
+    }
+
+    localStorage.setItem(TOKEN_STORAGE_KEY, nextToken);
+    setToken(nextToken);
+    setUser(nextUser);
+    return nextUser;
   };
 
   const signup = async (name, email, password) => {
-    const response = await axios.post(`${API}/auth/signup`, { name, email, password });
-    const { token: newToken, user: userData } = response.data;
-    localStorage.setItem('token', newToken);
-    setToken(newToken);
-    setUser(userData);
-    return userData;
+    const response = await axios.post(`${API}/auth/signup`, { name, email, password }, { withCredentials: true });
+    const nextToken = response.data?.token;
+    const nextUser = response.data?.user;
+
+    if (!nextToken || !nextUser) {
+      throw new Error('Invalid signup response from server.');
+    }
+
+    localStorage.setItem(TOKEN_STORAGE_KEY, nextToken);
+    setToken(nextToken);
+    setUser(nextUser);
+    return nextUser;
   };
+
+  const logout = useCallback(() => {
+    clearAuth();
+  }, [clearAuth]);
 
   const googleLogin = () => {
-    // REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
-    const redirectUrl = window.location.origin + '/auth/callback';
-    window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
+    throw new Error('Google login is not configured.');
   };
 
-  const processOAuthCallback = async (sessionId) => {
-    const response = await axios.get(`${API}/auth/session?session_id=${sessionId}`, {
-      withCredentials: true
-    });
-    setUser(response.data);
-    return response.data;
+  const processOAuthCallback = async () => {
+    throw new Error('OAuth callback is not used in this auth flow.');
   };
 
   const refreshUser = async () => {
@@ -82,18 +89,20 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      token,
-      loading,
-      login,
-      signup,
-      logout,
-      googleLogin,
-      processOAuthCallback,
-      refreshUser,
-      isAuthenticated: !!user
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        loading,
+        login,
+        signup,
+        logout,
+        googleLogin,
+        processOAuthCallback,
+        refreshUser,
+        isAuthenticated: !!user,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
