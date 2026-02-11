@@ -319,6 +319,20 @@ async def recent_stock_analyses():
 async def root_health():
     return {"status": "ok", "time": datetime.now(timezone.utc).isoformat()}
 
+
+@api_router.get("/config/health")
+async def config_health():
+    return {
+        "status": "ok",
+        "time": datetime.now(timezone.utc).isoformat(),
+        "config": {
+            "gemini_configured": bool(GEMINI_API_KEY),
+            "gemini_model": GEMINI_MODEL,
+            "mongo_configured": bool(MONGO_URI),
+            "jwt_configured": bool(JWT_SECRET),
+        },
+    }
+
 @api_router.post("/auth/signup")
 async def signup(user: UserCreate):
     if await db.users.find_one({"email": user.email}):
