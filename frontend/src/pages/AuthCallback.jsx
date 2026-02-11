@@ -36,7 +36,7 @@ export default function AuthCallback() {
         navigate('/dashboard', { replace: true });
       } catch (error) {
         console.error('OAuth callback error:', error);
-        toast.error('Authentication failed. Please try again.');
+        toast.error(error.message || 'Authentication failed. Please try again.');
         navigate('/login');
       }
     };
@@ -50,7 +50,7 @@ export default function AuthCallback() {
         <div className="w-16 h-16 rounded-xl bg-emerald-600 flex items-center justify-center mx-auto mb-6">
           <TrendingUp className="w-10 h-10 text-white" />
         </div>
-        <h2 className="font-heading text-2xl font-bold text-foreground mb-2">Signing you in...</h2>
+        <h2 className="font-heading text-2xl font-bold text-foreground mb-2">Finalizing authentication...</h2>
         <p className="text-muted-foreground">Please wait while we complete your authentication.</p>
         <div className="mt-6">
           <div className="animate-spin rounded-full h-8 w-8 border-2 border-emerald-600 border-t-transparent mx-auto"></div>
