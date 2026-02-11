@@ -44,7 +44,7 @@ export default function Navbar() {
             <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
               <TrendingUp className="w-5 h-5 text-white" />
             </div>
-            <span className="font-heading font-bold text-xl text-foreground">ClearMarket</span>
+            <span className="font-heading font-bold text-xl text-foreground">ClearAI</span>
           </Link>
 
           {/* Desktop Navigation */}

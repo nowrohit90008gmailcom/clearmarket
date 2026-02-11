@@ -47,7 +47,7 @@ export default function Login() {
             <div className="w-10 h-10 rounded-lg bg-emerald-600 flex items-center justify-center">
               <TrendingUp className="w-6 h-6 text-white" />
             </div>
-            <span className="font-heading font-bold text-2xl text-foreground">ClearMarket</span>
+            <span className="font-heading font-bold text-2xl text-foreground">ClearAI</span>
           </Link>
 
           <Card className="border-0 shadow-none bg-transparent">
@@ -163,7 +163,7 @@ export default function Login() {
         <div className="relative z-10 flex flex-col justify-center h-full p-12">
           <blockquote className="text-white">
             <p className="text-2xl font-medium mb-6">
-              "ClearMarket helped me understand stocks without the confusing jargon. 
+              "ClearAI helped me understand stocks without the confusing jargon. 
               Now I invest with confidence."
             </p>
             <footer className="flex items-center gap-4">

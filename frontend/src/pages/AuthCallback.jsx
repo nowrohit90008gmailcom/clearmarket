@@ -29,7 +29,7 @@ export default function AuthCallback() {
 
         // Process the OAuth callback
         await processOAuthCallback(sessionId);
-        toast.success('Welcome to ClearMarket!');
+        toast.success('Welcome to ClearAI!');
         
         // Clear hash and navigate
         window.history.replaceState(null, '', window.location.pathname);
