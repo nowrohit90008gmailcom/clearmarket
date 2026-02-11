@@ -36,7 +36,7 @@
 
    | Variable | Value |
    |----------|-------|
-   | `MONGO_URL` | `mongodb+srv://user:pass@cluster.mongodb.net/clearmarket` |
+   | `MONGO_URI` | `mongodb+srv://user:pass@cluster.mongodb.net/clearmarket` |
    | `DB_NAME` | `clearmarket` |
    | `EMERGENT_LLM_KEY` | `your_gemini_api_key` |
    | `JWT_SECRET` | `your_random_secret_key_here` |
@@ -110,7 +110,7 @@ clearmarket/
 
 ### Backend not starting?
 - Check logs in Railway dashboard
-- Verify MONGO_URL is correct
+- Verify MONGO_URI is correct
 - Ensure all env variables are set
 
 ### Frontend shows blank page?

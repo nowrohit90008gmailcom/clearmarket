@@ -26,7 +26,21 @@ JWT_SECRET = os.environ["JWT_SECRET"]
 
 EMERGENT_LLM_KEY = os.environ.get("EMERGENT_LLM_KEY")
 ALPHA_VANTAGE_KEY = os.environ.get("ALPHA_VANTAGE_KEY", "demo")
-CORS_ORIGINS = os.environ.get("CORS_ORIGINS", "*").split(",")
+APP_ENV = os.environ.get("APP_ENV", "development")
+
+def parse_cors_origins() -> list[str]:
+    raw = os.environ.get("CORS_ORIGINS", "http://localhost:3000")
+    origins = [origin.strip() for origin in raw.split(",") if origin.strip()]
+
+    if APP_ENV.lower() == "production" and "*" in origins:
+        raise RuntimeError(
+            "Unsafe CORS config: CORS_ORIGINS cannot include '*' in production. "
+            "Set explicit domain(s), e.g. https://yourdomain.com"
+        )
+
+    return origins
+
+CORS_ORIGINS = parse_cors_origins()
 
 # ================== DB ==================
 
