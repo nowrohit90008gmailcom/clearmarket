@@ -12,14 +12,14 @@ export default function Footer() {
               <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
                 <TrendingUp className="w-5 h-5 text-white" />
               </div>
-              <span className="font-heading font-bold text-xl text-white">ClearMarket</span>
+              <span className="font-heading font-bold text-xl text-white">ClearAI</span>
             </div>
             <p className="text-slate-400 text-sm max-w-md">
               Empowering Indian retail investors with jargon-free, AI-powered stock analysis. 
               Make informed decisions with clarity, not noise.
             </p>
             <p className="text-xs text-slate-500 mt-4">
-              Disclaimer: ClearMarket is for informational purposes only. It does not constitute 
+              Disclaimer: ClearAI is for informational purposes only. It does not constitute 
               financial advice. Always consult a qualified financial advisor before making investment decisions.
             </p>
           </div>
@@ -61,7 +61,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-slate-800 mt-8 pt-8 text-center text-sm text-slate-500">
-          <p>&copy; {new Date().getFullYear()} ClearMarket. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} ClearAI. All rights reserved.</p>
         </div>
       </div>
     </footer>

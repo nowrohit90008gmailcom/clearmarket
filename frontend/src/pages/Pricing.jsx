@@ -183,7 +183,7 @@ export default function Pricing() {
               <CardContent className="p-6">
                 <h3 className="font-semibold text-foreground mb-2">Is this financial advice?</h3>
                 <p className="text-sm text-muted-foreground">
-                  No. ClearMarket provides educational insights and analysis tools. 
+                  No. ClearAI provides educational insights and analysis tools. 
                   Always consult a qualified financial advisor for investment decisions.
                 </p>
               </CardContent>
