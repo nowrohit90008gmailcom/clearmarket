@@ -1,29 +1,14 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { Badge } from '../components/ui/badge';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Switch } from '../components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '../components/ui/dialog';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../components/ui/select';
 import { toast } from 'sonner';
 import { 
   BarChart,
@@ -54,45 +39,45 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 export default function Admin() {
   const { token } = useAuth();
   const [users, setUsers] = useState([]);
-  const [stats, setStats] = useState({});
+  const [stats, setStats] = useState({ page_views: [] });
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [blogDialogOpen, setBlogDialogOpen] = useState(false);
-  const [editingBlog, setEditingBlog] = useState(null);
   const [blogForm, setBlogForm] = useState({
-    title: '', content: '', excerpt: '', cover_image: '', tags: '', published: false
+    title: '', content: '', excerpt: '', cover_image: '', tags: '', published: false,
   });
 
-  const fetchAdminData = useCallback(async () => {
+  const authHeaders = { headers: { Authorization: `Bearer ${token}` }, withCredentials: true };
+
+  const fetchAdminData = async () => {
+    setLoading(true);
     try {
       const [usersRes, statsRes, blogsRes] = await Promise.all([
-        axios.get(`${API}/admin/users`, {
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true
-        }),
-        axios.get(`${API}/admin/stats`, {
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true
-        }),
-        axios.get(`${API}/admin/blogs`, {
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true
-        })
+        axios.get(`${API}/admin/users`, authHeaders),
+        axios.get(`${API}/admin/stats`, authHeaders),
+        axios.get(`${API}/admin/blogs`, authHeaders),
       ]);
-      setUsers(usersRes.data);
-      setStats(statsRes.data);
-      setBlogs(blogsRes.data);
+      setUsers(usersRes.data || []);
+      setStats(statsRes.data || { page_views: [] });
+      setBlogs(blogsRes.data || []);
     } catch (e) {
       console.error('Admin fetch error:', e);
-      toast.error('Failed to load admin data');
+      toast.error(e?.response?.data?.detail || 'Failed to load admin data');
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  };
 
   useEffect(() => {
     fetchAdminData();
-  }, [fetchAdminData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
+  const createBlog = async (e) => {
+    e.preventDefault();
+    if (!blogForm.title || !blogForm.content) {
+      toast.error('Title and content are required');
+      return;
+    }
 
 
   const updateUserRole = async (userId, role) => {

@@ -74,6 +74,29 @@ export function AuthProvider({ children }) {
     setUser(null);
   }, []);
 
+  const hydrateSession = useCallback(async (authResponse) => {
+    const nextToken = authResponse.idToken;
+    localStorage.setItem(TOKEN_STORAGE_KEY, nextToken);
+    localStorage.setItem(REFRESH_STORAGE_KEY, authResponse.refreshToken || '');
+    setToken(nextToken);
+
+    const baseUser = normalizeUser({
+      localId: authResponse.localId,
+      email: authResponse.email,
+      displayName: authResponse.displayName,
+      photoUrl: authResponse.photoUrl,
+    });
+
+    const backendProfile = await fetchBackendProfile(nextToken);
+    const userData = {
+      ...baseUser,
+      ...(backendProfile || {}),
+    };
+
+    setUser(userData);
+    return userData;
+  }, []);
+
   const fetchUser = useCallback(async () => {
     if (!token) {
       setUser(null);
@@ -160,6 +183,14 @@ export function AuthProvider({ children }) {
   const processOAuthCallback = async () => {
     throw new Error('OAuth callback is not used with this Firebase auth flow.');
   };
+
+  const processOAuthCallback = async () => {
+    throw new Error('OAuth callback is not used with this Firebase auth flow.');
+  };
+
+  const logout = useCallback(async () => {
+    clearAuth();
+  }, [clearAuth]);
 
   const refreshUser = async () => {
     await fetchUser();

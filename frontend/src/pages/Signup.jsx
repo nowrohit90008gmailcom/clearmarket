@@ -48,6 +48,20 @@ export default function Signup() {
     'Portfolio tracking'
   ];
 
+
+  const handleGoogleAuth = async () => {
+    setGoogleLoading(true);
+    try {
+      await googleLogin();
+      toast.success('Signed in with Google successfully!');
+      navigate('/dashboard');
+    } catch (error) {
+      toast.error(error.message || 'Google sign-in failed');
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2" data-testid="signup-page">
       {/* Left - Form */}
@@ -132,6 +146,32 @@ export default function Signup() {
                   {loading ? 'Creating account...' : 'Create Account'}
                 </Button>
               </form>
+
+              <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-border" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                </div>
+              </div>
+
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full h-12"
+                onClick={handleGoogleAuth}
+                disabled={googleLoading}
+                data-testid="google-auth-btn"
+              >
+                <svg className="w-5 h-5 mr-2" viewBox="0 0 48 48" aria-hidden="true">
+                  <path fill="#EA4335" d="M24 9.5c3.54 0 6.73 1.22 9.24 3.61l6.9-6.9C35.95 2.33 30.35 0 24 0 14.64 0 6.55 5.39 2.56 13.22l8.04 6.24C12.53 13.27 17.8 9.5 24 9.5Z"/>
+                  <path fill="#4285F4" d="M46.98 24.55c0-1.57-.14-3.08-.4-4.55H24v9.02h12.9c-.56 2.98-2.24 5.5-4.77 7.19l7.33 5.69C43.74 37.95 46.98 31.75 46.98 24.55Z"/>
+                  <path fill="#FBBC05" d="M10.6 28.54a14.49 14.49 0 0 1 0-9.08l-8.04-6.24a24.02 24.02 0 0 0 0 21.56l8.04-6.24Z"/>
+                  <path fill="#34A853" d="M24 48c6.35 0 11.68-2.09 15.57-5.68l-7.33-5.69c-2.04 1.37-4.66 2.17-8.24 2.17-6.2 0-11.47-3.77-13.4-9.96l-8.04 6.24C6.55 42.61 14.64 48 24 48Z"/>
+                </svg>
+                {googleLoading ? 'Connecting Google...' : 'Continue with Google'}
+              </Button>
 
               <p className="mt-6 text-center text-sm text-muted-foreground">
                 Already have an account?{' '}

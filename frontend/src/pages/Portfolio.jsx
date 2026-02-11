@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
@@ -15,21 +14,12 @@ import {
   DialogTrigger,
 } from '../components/ui/dialog';
 import { toast } from 'sonner';
-import { 
-  Briefcase, 
-  TrendingUp, 
-  TrendingDown, 
-  Plus, 
-  Trash2,
-  LineChart,
-  IndianRupee
-} from 'lucide-react';
+import { Briefcase, Plus, Trash2 } from 'lucide-react';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 export default function Portfolio() {
   const { token } = useAuth();
-  const navigate = useNavigate();
   const [portfolio, setPortfolio] = useState({ stocks: [], summary: {} });
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -39,7 +29,7 @@ export default function Portfolio() {
     try {
       const response = await axios.get(`${API}/portfolio`, {
         headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true
+        withCredentials: true,
       });
       setPortfolio(response.data);
     } catch (e) {
@@ -61,20 +51,21 @@ export default function Portfolio() {
       toast.error('Please fill all fields');
       return;
     }
+
     try {
       await axios.post(`${API}/portfolio/add`, {
         symbol: newStock.symbol.toUpperCase(),
         quantity: parseFloat(newStock.quantity),
-        buy_price: parseFloat(newStock.buy_price)
+        buy_price: parseFloat(newStock.buy_price),
       }, {
         headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true
+        withCredentials: true,
       });
       toast.success('Stock added to portfolio!');
       setNewStock({ symbol: '', quantity: '', buy_price: '' });
       setDialogOpen(false);
       fetchPortfolio();
-    } catch (e) {
+    } catch {
       toast.error('Failed to add stock');
     }
   };
@@ -83,11 +74,11 @@ export default function Portfolio() {
     try {
       await axios.delete(`${API}/portfolio/${stockId}`, {
         headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true
+        withCredentials: true,
       });
       toast.success('Stock removed from portfolio');
       fetchPortfolio();
-    } catch (e) {
+    } catch {
       toast.error('Failed to remove stock');
     }
   };

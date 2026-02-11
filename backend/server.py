@@ -3,13 +3,16 @@ from fastapi.security import HTTPBearer
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
+from pathlib import Path
+from pydantic import BaseModel, EmailStr, Field
+from typing import List, Optional, Dict, Any
+from datetime import datetime, timezone, timedelta
 import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional, Dict, Any
 import uuid
-from datetime import datetime, timezone, timedelta
 import bcrypt
 import jwt
 import httpx
@@ -427,6 +430,20 @@ async def config_health():
         },
     }
 
+
+@api_router.get("/config/health")
+async def config_health():
+    return {
+        "status": "ok",
+        "time": datetime.now(timezone.utc).isoformat(),
+        "config": {
+            "groq": {"configured": bool(GROQ_API_KEY), "model": GROQ_MODEL},
+            "database": {"name": DB_NAME},
+            "admin_emails_configured": len(ADMIN_EMAILS),
+        },
+    }
+
+
 @api_router.post("/auth/signup")
 async def signup(user: UserCreate):
     if await db.users.find_one({"email": user.email}):
@@ -436,7 +453,7 @@ async def signup(user: UserCreate):
     role = "admin" if user.email.lower() in ADMIN_EMAILS else "user"
     doc = {
         "user_id": user_id,
-        "email": user.email,
+        "email": user.email.lower(),
         "name": user.name,
         "password_hash": hash_password(user.password),
         "created_at": datetime.now(timezone.utc).isoformat(),
@@ -449,10 +466,11 @@ async def signup(user: UserCreate):
     return {"token": create_token(user_id), "user": build_user_response(doc)}
 
 
+
 @api_router.post("/auth/login")
 async def login(user: UserLogin):
-    db_user = await db.users.find_one({"email": user.email})
-    if not db_user or not verify_password(user.password, db_user["password_hash"]):
+    db_user = await db.users.find_one({"email": user.email.lower()})
+    if not db_user or not verify_password(user.password, db_user.get("password_hash", "")):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     public_user = {k: v for k, v in db_user.items() if k not in {"_id", "password_hash"}}
