@@ -1,8 +1,9 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { firebaseConfig } from '../lib/firebaseConfig';
 
 const AuthContext = createContext();
 
-const FIREBASE_API_KEY = process.env.REACT_APP_FIREBASE_API_KEY;
+const FIREBASE_API_KEY = process.env.REACT_APP_FIREBASE_API_KEY || firebaseConfig.apiKey;
 const FIREBASE_AUTH_BASE = 'https://identitytoolkit.googleapis.com/v1';
 
 const TOKEN_STORAGE_KEY = 'token';
